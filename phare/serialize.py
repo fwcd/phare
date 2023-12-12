@@ -2,6 +2,8 @@ from typing import Any, Protocol, Self, TypeVar
 
 from phare.error import DeserializeError
 
+import numpy as np
+
 T = TypeVar("T")
 
 class Serializable(Protocol):
@@ -20,8 +22,10 @@ def serialize(value: Any) -> Any:
     will default to returning any unrecognized values verbatim.
     '''
 
-    if (serialize := getattr(value, 'serialize')) and callable(serialize):
-        return serialize(value)
+    if isinstance(value, np.ndarray):
+        return value.tobytes()
+    elif hasattr(value, 'serialize') and callable(value.serialize):
+        return value.serialize()
     else:
         return value
 
@@ -31,8 +35,8 @@ def deserialize(ty: type[T], raw: Any) -> T:
     Will throw `DeserializeError` if the conversion failed.
     '''
 
-    if (deserialize := getattr(ty, 'deserialize')) and callable(deserialize):
-        value = deserialize(ty, raw)
+    if hasattr(ty, 'deserialize') and callable(ty.deserialize):
+        value = ty.deserialize(raw)
     else:
         value = raw
     if not isinstance(value, ty):

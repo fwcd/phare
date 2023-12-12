@@ -2,13 +2,13 @@ from dataclasses import dataclass
 from typing import Any, Generic, Optional, Self, TypeVar
 
 from phare.auth import Auth
-from phare.serialize import Deserializable, Serializable, deserialize, serialize
+from phare.serialize import Deserializable, deserialize, serialize
 
-T = TypeVar("T", bound=Serializable)
-U = TypeVar("U", bound=Deserializable)
+T = TypeVar("T")
+U = TypeVar("U")
 
 @dataclass
-class ClientMessage(Generic[T], Serializable):
+class ClientMessage(Generic[T]):
     request_id: int
     verb: str
     path: list[str]
@@ -22,7 +22,7 @@ class ClientMessage(Generic[T], Serializable):
             'VERB': self.verb,
             'PATH': self.path,
             'META': self.meta,
-            'AUTH': self.auth,
+            'AUTH': serialize(self.auth),
             'PAYL': serialize(self.payload),
         }
 
