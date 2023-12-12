@@ -36,6 +36,7 @@ class Lighthouse:
     async def put_model(self, frame: ArrayLike):
         frame = np.asarray(frame)
         assert frame.shape == LIGHTHOUSE_FRAME_SHAPE
+        assert frame.dtype == np.uint8
         await self.put(['user', self.auth.user, 'model'], frame)
         # TODO: Return response
 
