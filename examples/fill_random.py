@@ -14,6 +14,5 @@ async def main():
     async with await Lighthouse.connect(Auth(user, token), url) as lh:
         frame = np.random.randint(0, 255, size=LIGHTHOUSE_FRAME_SHAPE, dtype=np.uint8)
         await lh.put_model(frame)
-        await asyncio.sleep(10)
 
 asyncio.run(main())
