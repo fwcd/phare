@@ -1,4 +1,4 @@
-from websocket import create_connection
+from websocket import create_connection # type: ignore
 
 from phare.auth import Auth
 from phare.constants import LIGHTHOUSE_URL
