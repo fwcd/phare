@@ -1,5 +1,6 @@
 # Phare
 
+[![PyPI](https://img.shields.io/pypi/v/phare)](https://pypi.org/project/phare)
 [![Build](https://github.com/fwcd/phare/actions/workflows/build.yml/badge.svg)](https://github.com/fwcd/phare/actions/workflows/build.yml)
 
 An asynchronous and ergonomic client library for the Project Lighthouse API.
