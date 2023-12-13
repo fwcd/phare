@@ -3,3 +3,6 @@ class PhareError(Exception):
 
 class DeserializeError(PhareError):
     pass
+
+class ServerError(PhareError):
+    pass

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Any, Generic, Optional, Self, TypeVar
 
 from phare.auth import Auth
+from phare.error import ServerError
 from phare.serialize import Deserializable, deserialize, serialize
 
 T = TypeVar("T")
@@ -43,6 +44,10 @@ class ServerMessage(Generic[U]):
             response=raw.get('RESPONSE'),
             payload=deserialize(payload_ty, raw['PAYL']),
         )
+    
+    def check(self):
+        if self.code != 200:
+            raise ServerError(f'Request {self.request_id} errored with code {self.code} (warnings: {self.warnings}, response: {self.response})')
 
 @dataclass
 class InputEvent(Deserializable):
