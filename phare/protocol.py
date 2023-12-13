@@ -1,21 +1,18 @@
 from dataclasses import dataclass
-from typing import Any, Generic, Optional, Self, TypeVar
+from typing import Any, Optional, Self
 
 from phare.auth import Auth
 from phare.error import ServerError
 from phare.serialize import Deserializable, deserialize, serialize
 
-T = TypeVar("T")
-U = TypeVar("U")
-
 @dataclass
-class ClientMessage(Generic[T]):
+class ClientMessage:
     request_id: int
     verb: str
     path: list[str]
     meta: dict[str, str]
     auth: Auth
-    payload: T
+    payload: Any
 
     def serialize(self) -> dict[str, Any]:
         return {
@@ -28,21 +25,21 @@ class ClientMessage(Generic[T]):
         }
 
 @dataclass
-class ServerMessage(Generic[U]):
+class ServerMessage:
     code: int
     request_id: Optional[int]
     warnings: list[str]
     response: Optional[str]
-    payload: U
+    payload: Any
 
     @classmethod
-    def deserialize(cls, payload_ty: type[U], raw: dict[str, Any]) -> Self:
+    def deserialize(cls, raw: dict[str, Any]) -> Self:
         return ServerMessage(
             code=raw['RNUM'],
             request_id=raw.get('REID'),
             warnings=raw.get('WARNINGS', []),
             response=raw.get('RESPONSE'),
-            payload=deserialize(payload_ty, raw['PAYL']),
+            payload=raw['PAYL'], # TODO: Deserialize
         )
     
     def check(self):

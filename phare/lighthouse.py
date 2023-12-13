@@ -76,7 +76,7 @@ class Lighthouse:
         ))
         return request_id
 
-    async def send_message(self, message: ClientMessage[Any]):
+    async def send_message(self, message: ClientMessage):
         binary: bytes = msgpack.packb(serialize(message))
         await self._websocket.send(binary)
 
@@ -85,7 +85,7 @@ class Lighthouse:
         await self._receive_events.put(event)
         return event
 
-    async def receive_message(self, request_id: int) -> ServerMessage[Any]:
+    async def receive_message(self, request_id: int) -> ServerMessage:
         while request_id not in self._received_messages:
             event = await self.next_message_event()
             await event.wait()
